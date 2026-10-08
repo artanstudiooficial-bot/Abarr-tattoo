@@ -13,6 +13,15 @@ import {
 } from 'lucide-react';
 
 /* ==========================================================================
+   IMPORTAÇÃO CORRETA DAS IMAGENS (PADRÃO VITE)
+   ========================================================================== */
+import heroImg from './assets/images/hero_tattoo_machine_1791466303298.jpg';
+import blackworkImg from './assets/images/tattoo_blackwork_geo_1791466340220.jpg';
+import darkartImg from './assets/images/tattoo_darkart_neo_1791466331279.jpg';
+import finelineImg from './assets/images/tattoo_fineline_micro_1791466316805.jpg';
+import studioImg from './assets/images/tattoo_studio_suite_1791466348679.jpg';
+
+/* ==========================================================================
    CONFIGURAÇÕES & DADOS DO ESTÚDIO
    ========================================================================== */
 
@@ -25,15 +34,19 @@ const STUDIO_CONFIG = {
   instagramHandle: '@abarr_tattoo',
   phoneFormatted: '+55 (48) 99246-1205',
   location: 'Florianópolis, Santa Catarina · Brasil',
-  hours: 'Segunda a Sábado, 10h às 20h (Atendimento Exclusivo com Hora Marcada)',
+  hours: 'Segunda a Sábado, 10h às 20h (Atendimento com Hora Marcada)',
 };
+
+const HERO_IMAGE_PRIMARY = heroImg;
+const HERO_IMAGE_FALLBACK = 'https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=1200&auto=format&fit=crop';
 
 interface PortfolioItem {
   id: string;
   title: string;
-  category: 'fineline' | 'darkart' | 'blackwork' | 'lettering';
+  category: 'fineline' | 'darkart' | 'blackwork';
   categoryLabel: string;
   image: string;
+  fallbackImage: string;
   alt: string;
   description: string;
   sessionTime: string;
@@ -47,7 +60,8 @@ const PORTFOLIO_ITEMS: PortfolioItem[] = [
     title: 'Flora & Geometria Cósmica',
     category: 'fineline',
     categoryLabel: 'Fine Line & Microrealismo',
-    image: '/src/assets/images/tattoo_fineline_micro_1791466316805.jpg',
+    image: finelineImg,
+    fallbackImage: 'https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?q=80&w=1000&auto=format&fit=crop',
     alt: 'Tatuagem Fine Line botânica e geometria cósmica no antebraço',
     description:
       'Linhas ultra-finas de agulha 03RL com micro-sombreamento stippling. Projeto desenvolvido sob medida para a anatomia do antebraço.',
@@ -60,7 +74,8 @@ const PORTFOLIO_ITEMS: PortfolioItem[] = [
     title: 'Crânio de Corvo Barroco',
     category: 'darkart',
     categoryLabel: 'Dark Art & Neo-trad',
-    image: '/src/assets/images/tattoo_darkart_neo_1791466331279.jpg',
+    image: darkartImg,
+    fallbackImage: 'https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=1000&auto=format&fit=crop',
     alt: 'Tatuagem Dark Art de crânio com detalhes barrocos no ombro',
     description:
       'Composição autoral com alto contraste, negros densos e sutil toque de pigmento carmim nos detalhes ornamentais.',
@@ -73,7 +88,8 @@ const PORTFOLIO_ITEMS: PortfolioItem[] = [
     title: 'Mandala & Padrão Geométrico Sagrado',
     category: 'blackwork',
     categoryLabel: 'Blackwork & Geometria',
-    image: '/src/assets/images/tattoo_blackwork_geo_1791466340220.jpg',
+    image: blackworkImg,
+    fallbackImage: 'https://images.unsplash.com/photo-1590246814883-578336f6ee61?q=80&w=1000&auto=format&fit=crop',
     alt: 'Tatuagem de mandala e geometria sagrada no peito e ombro',
     description:
       'Encaixe anatômico fluindo entre deltóide e peitoral. Precisão milimétrica em pontilhismo graduado e pretos sólidos.',
@@ -86,7 +102,8 @@ const PORTFOLIO_ITEMS: PortfolioItem[] = [
     title: 'Execução & Precisão em Agulha Única',
     category: 'fineline',
     categoryLabel: 'Precisão & Técnica',
-    image: '/src/assets/images/hero_tattoo_machine_1791466303298.jpg',
+    image: studioImg,
+    fallbackImage: 'https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=1000&auto=format&fit=crop',
     alt: 'Mão com luva preta segurando máquina rotativa executando traço',
     description:
       'Controle de profundidade dérmica com estabilidade estrita, prevenindo expansão ou estouro de traço ao longo dos anos.',
@@ -168,7 +185,7 @@ const TATTOO_STYLES = [
 ];
 
 /* ==========================================================================
-   COMPONENTE PRINCIPAL DO SITE (APP)
+   COMPONENTE PRINCIPAL (APP)
    ========================================================================== */
 
 export default function App() {
@@ -182,6 +199,8 @@ export default function App() {
   const [preferredPeriod, setPreferredPeriod] = useState<string>('Tarde');
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  const [heroImgSrc, setHeroImgSrc] = useState(HERO_IMAGE_PRIMARY);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -236,6 +255,12 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-[#E60000] selection:text-white font-epilogue antialiased overflow-x-hidden">
       
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne:wght@500;600;700;800&display=swap');
+        .font-syne { font-family: 'Syne', sans-serif !important; }
+        .font-epilogue { font-family: 'Epilogue', sans-serif !important; }
+      `}</style>
+
       {/* ----------------- NAVBAR ----------------- */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -252,7 +277,6 @@ export default function App() {
               </span>
             </a>
 
-            {/* Apenas no PC/Tablet - no telefone fica oculto */}
             <div className="hidden sm:block">
               <button
                 onClick={() => scrollToQuote()}
@@ -280,7 +304,6 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
               
-              {/* Esquerda: Título encorpado + Texto + Botões empilhados */}
               <div className="lg:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-7">
                 <h1 className="font-syne text-3xl sm:text-4xl lg:text-[2.65rem] xl:text-[3.1rem] font-extrabold leading-[1.12] tracking-tight uppercase text-white text-balance drop-shadow-md">
                   Arte Exclusiva na Pele. <br />
@@ -293,7 +316,6 @@ export default function App() {
                   Transforme sua ideia em uma tatuagem marcante com a Abarr Tattoo. Agende uma consulta e receba um orçamento gratuito, direto com nosso estúdio.
                 </p>
 
-                {/* Botões verticais (um abaixo do outro) */}
                 <div className="flex flex-col items-stretch sm:items-start gap-3.5 pt-1 w-full max-w-md">
                   <button
                     onClick={() => scrollToQuote()}
@@ -315,14 +337,14 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Direita: Fotografia com bordas vermelhas e sem textos por cima */}
               <div className="lg:col-span-6 relative mt-4 lg:mt-0">
                 <div className="relative mx-auto max-w-md sm:max-w-lg lg:max-w-none">
                   <div className="relative overflow-hidden border border-[#262626] bg-[#121212] group shadow-2xl">
                     <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#E60000] transition-colors duration-300 pointer-events-none z-20" />
                     
                     <img
-                      src="/src/assets/images/hero_tattoo_machine_1791466303298.jpg"
+                      src={heroImgSrc}
+                      onError={() => setHeroImgSrc(HERO_IMAGE_FALLBACK)}
                       alt="Close-up fotográfico de estúdio: máquina de tatuagem de precisão empunhada com luva cirúrgica preta"
                       referrerPolicy="no-referrer"
                       className="w-full h-auto max-h-[480px] sm:max-h-[520px] lg:max-h-[550px] aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3.8] object-cover filter contrast-[1.08] brightness-95 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
@@ -331,7 +353,6 @@ export default function App() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  {/* Detalhes geométricos nas bordas em vermelho */}
                   <div
                     className="absolute -bottom-3 -right-3 w-14 h-14 border-r-2 border-b-2 border-[#E60000] pointer-events-none"
                     aria-hidden="true"
@@ -366,7 +387,6 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Filtro interativo */}
               <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[#121212] border border-[#262626]">
                 {categories.map((cat) => {
                   const isActive = activeCategory === cat.id;
@@ -387,10 +407,8 @@ export default function App() {
               </div>
             </div>
 
-            {/* Bento Grid */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
               
-              {/* Card 1 */}
               <div
                 onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[0])}
                 className="md:col-span-7 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
@@ -398,6 +416,9 @@ export default function App() {
                 <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden">
                   <img
                     src={PORTFOLIO_ITEMS[0].image}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[0].fallbackImage;
+                    }}
                     alt={PORTFOLIO_ITEMS[0].alt}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
@@ -425,7 +446,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Card 2 */}
               <div
                 onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[1])}
                 className="md:col-span-5 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
@@ -433,6 +453,9 @@ export default function App() {
                 <div className="relative aspect-[3/4] sm:aspect-[4/4] overflow-hidden">
                   <img
                     src={PORTFOLIO_ITEMS[1].image}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[1].fallbackImage;
+                    }}
                     alt={PORTFOLIO_ITEMS[1].alt}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
@@ -460,7 +483,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Card 3 */}
               <div
                 onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[2])}
                 className="md:col-span-6 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
@@ -468,6 +490,9 @@ export default function App() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={PORTFOLIO_ITEMS[2].image}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[2].fallbackImage;
+                    }}
                     alt={PORTFOLIO_ITEMS[2].alt}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
@@ -495,7 +520,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Card 4 */}
               <div
                 onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[3])}
                 className="md:col-span-6 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
@@ -503,6 +527,9 @@ export default function App() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={PORTFOLIO_ITEMS[3].image}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[3].fallbackImage;
+                    }}
                     alt={PORTFOLIO_ITEMS[3].alt}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
@@ -533,7 +560,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Modal de Detalhe da Obra */}
           {selectedModalItem && (
             <div
               role="dialog"
@@ -556,6 +582,9 @@ export default function App() {
                 <div className="md:w-1/2 bg-[#0A0A0A] flex items-center justify-center overflow-hidden">
                   <img
                     src={selectedModalItem.image}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = selectedModalItem.fallbackImage;
+                    }}
                     alt={selectedModalItem.alt}
                     referrerPolicy="no-referrer"
                     className="w-full h-full max-h-[50vh] md:max-h-[80vh] object-cover"
@@ -666,9 +695,8 @@ export default function App() {
           </div>
         </section>
 
-        {/* ----------------- SIMULADOR DE ORÇAMENTO (COM NEON VERMELHO) ----------------- */}
+        {/* ----------------- SIMULADOR DE ORÇAMENTO ----------------- */}
         <section id="orcamento" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative overflow-hidden">
-          {/* Luz Neon Vermelha de Fundo */}
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[550px] sm:h-[700px] bg-[#E60000]/22 rounded-full blur-[140px] sm:blur-[180px] pointer-events-none"
             aria-hidden="true"
@@ -702,7 +730,6 @@ export default function App() {
                 }}
                 className="space-y-8"
               >
-                {/* 1. Local do corpo */}
                 <div className="space-y-3">
                   <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
                     1. Onde será a tatuagem no seu corpo?
@@ -728,7 +755,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 2. Estilo */}
                 <div className="space-y-3">
                   <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
                     2. Qual o estilo artístico principal?
@@ -759,7 +785,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 3. Tamanho & Horário */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
@@ -830,7 +855,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Prévia da Mensagem */}
                 <div className="p-4 sm:p-5 bg-[#0A0A0A] border border-[#262626] space-y-2">
                   <div className="flex items-center justify-between text-xs text-neutral-400 font-epilogue">
                     <div className="flex items-center gap-2 text-[#E60000] font-syne font-bold uppercase tracking-wider">
@@ -845,7 +869,6 @@ export default function App() {
                   </p>
                 </div>
 
-                {/* Botões de Ação */}
                 <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                   <a
                     href={whatsappHref}
@@ -927,7 +950,6 @@ export default function App() {
 
       {/* ----------------- FOOTER ----------------- */}
       <footer className="bg-[#0A0A0A] border-t border-[#262626] relative overflow-hidden">
-        {/* Bloco de conversão centralizado */}
         <div className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-b border-[#262626] relative">
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-[#E60000]/10 rounded-full blur-[140px] pointer-events-none"
@@ -972,7 +994,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Rodapé institucional com Instagram e WhatsApp */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14">
             <div className="md:col-span-5 space-y-4">
