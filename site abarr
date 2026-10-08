@@ -640,25 +640,21 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-              {PROCESS_STEPS.map((step) => (
+              {PROCESS_STEPS.map((item) => (
                 <div
-                  key={step.step}
-                  className="p-7 sm:p-8 bg-[#121212] border border-[#262626] relative flex flex-col justify-between space-y-8 group hover:border-[#E60000]/60 transition-colors"
+                  key={item.step}
+                  className="bg-[#121212] border border-[#262626] p-6 sm:p-8 space-y-4 hover:border-[#E60000]/60 transition-colors flex flex-col justify-between"
                 >
-                  <div className="space-y-4">
-                    <span className="font-syne text-3xl font-extrabold text-[#E60000] block">
-                      {step.step}.
+                  <div className="space-y-3">
+                    <span className="font-syne text-3xl font-extrabold text-[#E60000]">
+                      {item.step}
                     </span>
                     <h3 className="font-syne text-xl font-bold text-white">
-                      {step.title}
+                      {item.title}
                     </h3>
-                    <p className="font-epilogue text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                      {step.description}
+                    <p className="font-epilogue text-neutral-300 text-sm leading-relaxed">
+                      {item.description}
                     </p>
-                  </div>
-                  <div className="pt-4 border-t border-[#262626]/80 flex items-center justify-between text-[11px] font-syne uppercase tracking-wider text-neutral-500">
-                    <span>Etapa {step.step}</span>
-                    <span className="text-[#E60000]">Exclusivo</span>
                   </div>
                 </div>
               ))}
@@ -666,255 +662,198 @@ export default function App() {
           </div>
         </section>
 
-        {/* ----------------- SIMULADOR DE ORÇAMENTO (COM NEON VERMELHO) ----------------- */}
-        <section id="orcamento" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative overflow-hidden">
-          {/* Luz Neon Vermelha de Fundo */}
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[550px] sm:h-[700px] bg-[#E60000]/22 rounded-full blur-[140px] sm:blur-[180px] pointer-events-none"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[400px] h-[250px] bg-[#E60000]/30 rounded-full blur-[120px] pointer-events-none"
-            aria-hidden="true"
-          />
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="max-w-3xl mb-12 sm:mb-16 space-y-3 text-center mx-auto">
-              <div className="inline-flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-[#E60000] shadow-[0_0_12px_#E60000]" />
-                <p className="text-xs font-syne font-extrabold uppercase tracking-[0.25em] text-[#E60000]">
-                  Simulação de Orçamento
-                </p>
-              </div>
-              <h2 className="font-syne text-3xl sm:text-5xl font-extrabold tracking-tight uppercase text-white text-balance drop-shadow-md">
-                Simule & Solicite seu Orçamento Gratuito.
-              </h2>
-              <p className="font-epilogue text-neutral-300 text-sm sm:text-base max-w-xl mx-auto">
-                Personalize os parâmetros da sua tatuagem abaixo e envie diretamente para os tatuadores da Abarr Tattoo via WhatsApp com um clique.
-              </p>
-            </div>
-
-            <div className="max-w-4xl mx-auto bg-[#121212]/95 backdrop-blur-xl border border-[#262626] hover:border-[#E60000]/50 p-6 sm:p-10 lg:p-12 shadow-[0_0_50px_rgba(230,0,0,0.15)] transition-all duration-300">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  window.open(whatsappHref, '_blank');
-                }}
-                className="space-y-8"
-              >
-                {/* 1. Local do corpo */}
+        {/* ----------------- SIMULADOR DE ORÇAMENTO / QUOTE SECTION ----------------- */}
+        <section id="orcamento" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+              
+              {/* Esquerda: Informações e Dúvidas Rápidas */}
+              <div className="lg:col-span-5 space-y-8">
                 <div className="space-y-3">
-                  <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
-                    1. Onde será a tatuagem no seu corpo?
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-                    {BODY_PLACEMENTS.map((placement) => {
-                      const isSelected = selectedPlacement === placement;
-                      return (
-                        <button
-                          key={placement}
-                          type="button"
-                          onClick={() => setSelectedPlacement(placement)}
-                          className={`px-3 py-2.5 text-xs font-epilogue transition-all text-center border cursor-pointer ${
-                            isSelected
-                              ? 'border-[#E60000] bg-[#E60000]/20 text-white font-semibold shadow-[0_0_15px_rgba(230,0,0,0.3)]'
-                              : 'border-[#262626] bg-[#0A0A0A] text-neutral-400 hover:text-white hover:border-neutral-700'
-                          }`}
-                        >
-                          {placement}
-                        </button>
-                      );
-                    })}
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-[#E60000]" />
+                    <p className="text-xs font-syne font-bold uppercase tracking-[0.2em] text-[#E60000]">
+                      Orçamento Gratuito & Direto
+                    </p>
                   </div>
-                </div>
-
-                {/* 2. Estilo */}
-                <div className="space-y-3">
-                  <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
-                    2. Qual o estilo artístico principal?
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {TATTOO_STYLES.map((style) => {
-                      const isSelected = selectedStyle === style.id;
-                      return (
-                        <button
-                          key={style.id}
-                          type="button"
-                          onClick={() => setSelectedStyle(style.id)}
-                          className={`p-3.5 border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                            isSelected
-                              ? 'border-[#E60000] bg-[#E60000]/20 shadow-[0_0_15px_rgba(230,0,0,0.25)]'
-                              : 'border-[#262626] bg-[#0A0A0A] hover:border-neutral-700'
-                          }`}
-                        >
-                          <span className={`text-xs font-syne font-bold ${isSelected ? 'text-white' : 'text-neutral-300'}`}>
-                            {style.label}
-                          </span>
-                          <span className="text-[11px] font-epilogue text-neutral-500 mt-1">
-                            {style.hint}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 3. Tamanho & Horário */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
-                      3. Tamanho aproximado
-                    </label>
-                    <div className="space-y-2">
-                      {[
-                        { label: '5 a 8 cm (Pequena/Delicada)', value: '5 a 8 cm' },
-                        { label: '10 a 15 cm (Média)', value: '10 a 15 cm' },
-                        { label: '15 a 25 cm (Grande)', value: '15 a 25 cm' },
-                        { label: 'Fechamento de Área / Projeto Amplo', value: 'Fechamento / Projeto Amplo' },
-                      ].map((opt) => (
-                        <label
-                          key={opt.value}
-                          className={`flex items-center gap-3 p-3 border cursor-pointer transition-colors ${
-                            sizeRange === opt.value
-                              ? 'border-[#E60000] bg-[#E60000]/20 text-white'
-                              : 'border-[#262626] bg-[#0A0A0A] text-neutral-400 hover:text-white hover:border-neutral-700'
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="size"
-                            value={opt.value}
-                            checked={sizeRange === opt.value}
-                            onChange={() => setSizeRange(opt.value)}
-                            className="accent-[#E60000]"
-                          />
-                          <span className="text-xs font-epilogue">{opt.label}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
-                      4. Preferência de horário
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {['Manhã (10h-14h)', 'Tarde (14h-18h)', 'Sábado'].map((period) => (
-                        <button
-                          key={period}
-                          type="button"
-                          onClick={() => setPreferredPeriod(period)}
-                          className={`p-3 text-xs font-epilogue text-center border cursor-pointer transition-colors ${
-                            preferredPeriod === period
-                              ? 'border-[#E60000] bg-[#E60000]/20 text-white font-semibold shadow-[0_0_12px_rgba(230,0,0,0.3)]'
-                              : 'border-[#262626] bg-[#0A0A0A] text-neutral-400 hover:text-white'
-                          }`}
-                        >
-                          {period}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="pt-3 space-y-2">
-                      <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
-                        5. Descreva sua ideia ou conceito (Opcional)
-                      </label>
-                      <textarea
-                        rows={3}
-                        value={ideaText}
-                        onChange={(e) => setIdeaText(e.target.value)}
-                        placeholder="Ex: Tatuagem botânica com traços finos no antebraço interno..."
-                        className="w-full bg-[#0A0A0A] border border-[#262626] p-3 text-xs font-epilogue text-white placeholder-neutral-600 focus:outline-none focus:border-[#E60000] transition-colors resize-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Prévia da Mensagem */}
-                <div className="p-4 sm:p-5 bg-[#0A0A0A] border border-[#262626] space-y-2">
-                  <div className="flex items-center justify-between text-xs text-neutral-400 font-epilogue">
-                    <div className="flex items-center gap-2 text-[#E60000] font-syne font-bold uppercase tracking-wider">
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      <span>Prévia do Envio para o WhatsApp</span>
-                    </div>
-                    <span className="text-[11px] text-neutral-500">+55 48 99246-1205</span>
-                  </div>
-                  <p className="text-xs font-epilogue text-neutral-300 bg-neutral-950 p-3 border border-neutral-900 leading-relaxed font-mono whitespace-pre-line text-neutral-400">
-                    Local: <span className="text-white">{selectedPlacement}</span> · Estilo: <span className="text-white">{currentStyleObj.label}</span> · Tamanho: <span className="text-white">{sizeRange}</span> · Turno: <span className="text-white">{preferredPeriod}</span>
-                    {ideaText ? ` · Ideia: "${ideaText}"` : ''}
+                  <h2 className="font-syne text-3xl sm:text-4xl font-bold tracking-tight text-white text-balance">
+                    Simule seu Projeto & Agende sua Sessão.
+                  </h2>
+                  <p className="font-epilogue text-neutral-300 text-sm sm:text-base leading-relaxed">
+                    Selecione as características do seu projeto ao lado. Ao finalizar, o sistema enviará os detalhes direto para o nosso WhatsApp com um clique.
                   </p>
                 </div>
 
-                {/* Botões de Ação */}
-                <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <div className="space-y-4 pt-4 border-t border-[#262626]">
+                  <div className="flex items-start gap-4 p-4 bg-[#121212] border border-[#262626]">
+                    <div className="p-2 bg-[#E60000]/10 border border-[#E60000]/30 text-[#E60000]">
+                      <Clock className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-syne font-bold text-sm text-white">Atendimento Exclusivo</h4>
+                      <p className="font-epilogue text-xs text-neutral-400 mt-0.5">{STUDIO_CONFIG.hours}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 p-4 bg-[#121212] border border-[#262626]">
+                    <div className="p-2 bg-[#E60000]/10 border border-[#E60000]/30 text-[#E60000]">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-syne font-bold text-sm text-white">Localização</h4>
+                      <p className="font-epilogue text-xs text-neutral-400 mt-0.5">{STUDIO_CONFIG.location}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Direita: Simulador Interativo */}
+              <div className="lg:col-span-7 bg-[#121212] border border-[#262626] p-6 sm:p-8 space-y-6 shadow-2xl">
+                <h3 className="font-syne text-xl font-bold text-white border-b border-[#262626] pb-4">
+                  Simulador de Projeto Autoral
+                </h3>
+
+                {/* 1. Escolha do Estilo */}
+                <div className="space-y-2">
+                  <label className="text-xs font-syne font-bold uppercase tracking-wider text-neutral-300 block">
+                    1. Estilo de Tatuagem Desejado
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {TATTOO_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        type="button"
+                        onClick={() => setSelectedStyle(style.id)}
+                        className={`p-3 text-left border transition-all cursor-pointer ${
+                          selectedStyle === style.id
+                            ? 'bg-[#E60000]/15 border-[#E60000] text-white'
+                            : 'bg-[#0A0A0A] border-[#262626] text-neutral-400 hover:border-neutral-500'
+                        }`}
+                      >
+                        <span className="font-syne font-bold text-xs block text-white">{style.label}</span>
+                        <span className="font-epilogue text-[11px] text-neutral-400 mt-0.5 block">{style.hint}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 2. Local do Corpo */}
+                <div className="space-y-2">
+                  <label className="text-xs font-syne font-bold uppercase tracking-wider text-neutral-300 block">
+                    2. Local Anatômico no Corpo
+                  </label>
+                  <select
+                    value={selectedPlacement}
+                    onChange={(e) => setSelectedPlacement(e.target.value)}
+                    className="w-full bg-[#0A0A0A] border border-[#262626] text-white p-3 text-sm font-epilogue focus:outline-none focus:border-[#E60000]"
+                  >
+                    {BODY_PLACEMENTS.map((place) => (
+                      <option key={place} value={place}>
+                        {place}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* 3. Tamanho Estimado */}
+                <div className="space-y-2">
+                  <label className="text-xs font-syne font-bold uppercase tracking-wider text-neutral-300 block">
+                    3. Tamanho Aproximado
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {['Até 10 cm', '10 a 15 cm', 'Acima de 15 cm / Peça Grande'].map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => setSizeRange(size)}
+                        className={`py-2.5 px-2 text-xs font-syne font-semibold border transition-all cursor-pointer text-center ${
+                          sizeRange === size
+                            ? 'bg-white text-black border-white'
+                            : 'bg-[#0A0A0A] text-neutral-400 border-[#262626] hover:text-white'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 4. Descrição / Ideia */}
+                <div className="space-y-2">
+                  <label className="text-xs font-syne font-bold uppercase tracking-wider text-neutral-300 block">
+                    4. Descreva sua Ideia ou Elementos (Opcional)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={ideaText}
+                    onChange={(e) => setIdeaText(e.target.value)}
+                    placeholder="Ex: Quero um corvo estilizado com elementos geométricos e rosas sombreadas..."
+                    className="w-full bg-[#0A0A0A] border border-[#262626] text-white p-3 text-sm font-epilogue focus:outline-none focus:border-[#E60000] resize-none"
+                  />
+                </div>
+
+                {/* Botão de Envio WhatsApp */}
+                <div className="pt-4 border-t border-[#262626]">
                   <a
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-3 px-8 py-4.5 text-xs sm:text-sm uppercase font-syne font-extrabold tracking-wider bg-[#E60000] hover:bg-[#CC0000] text-white transition-all shadow-[0_0_30px_rgba(230,0,0,0.4)] text-center cursor-pointer"
+                    className="w-full inline-flex items-center justify-center gap-3 py-4 px-6 bg-[#E60000] text-white hover:bg-[#CC0000] font-syne font-extrabold text-xs uppercase tracking-widest transition-colors shadow-lg shadow-[#E60000]/20 cursor-pointer"
                   >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Enviar Orçamento para o WhatsApp (+55 48 99246-1205)</span>
+                    <MessageCircle className="w-5 h-5" />
+                    <span>Enviar Orçamento Direto no WhatsApp</span>
                     <ArrowRight className="w-4 h-4" />
                   </a>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `Local: ${selectedPlacement} | Estilo: ${currentStyleObj.label} | Tamanho: ${sizeRange} | Ideia: ${ideaText || 'Ideia a definir'}`
-                      );
-                      setIsCopied(true);
-                      setTimeout(() => setIsCopied(false), 3000);
-                    }}
-                    className="px-6 py-4.5 text-xs uppercase font-syne font-bold tracking-wider text-white border border-white/60 hover:border-white transition-colors cursor-pointer text-center"
-                  >
-                    {isCopied ? 'Resumo Copiado!' : 'Copiar Resumo'}
-                  </button>
+                  <p className="text-center font-epilogue text-[11px] text-neutral-500 mt-3">
+                    Você será redirecionado para o WhatsApp oficial da Abarr Tattoo com sua simulação pronta.
+                  </p>
                 </div>
-              </form>
+
+              </div>
+
             </div>
           </div>
         </section>
 
-        {/* ----------------- PERGUNTAS FREQUENTES ----------------- */}
-        <section id="duvidas" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+        {/* ----------------- FAQ SECTION ----------------- */}
+        <section id="faq" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center space-y-4 mb-16">
               <div className="inline-flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#E60000]" />
                 <p className="text-xs font-syne font-bold uppercase tracking-[0.2em] text-[#E60000]">
-                  Transparência & Cuidados
+                  Dúvidas Frequentes
                 </p>
               </div>
-              <h2 className="font-syne text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white text-balance">
-                Perguntas Frequentes.
+              <h2 className="font-syne text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                Tudo o que você precisa saber.
               </h2>
-              <p className="font-epilogue text-neutral-400 text-sm sm:text-base">
-                Tire suas dúvidas sobre o processo autoral, valores e cuidados antes da sua sessão.
-              </p>
             </div>
 
             <div className="space-y-4">
-              {FAQ_ITEMS.map((item, idx) => {
-                const isOpen = openFaqIndex === idx;
+              {FAQ_ITEMS.map((item, index) => {
+                const isOpen = openFaqIndex === index;
                 return (
-                  <div key={idx} className="bg-[#121212] border border-[#262626] transition-colors">
+                  <div
+                    key={index}
+                    className="bg-[#121212] border border-[#262626] overflow-hidden transition-colors"
+                  >
                     <button
-                      type="button"
-                      onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                      className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                      className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-neutral-900/50"
                     >
-                      <span className="font-syne text-base sm:text-lg font-bold text-white pr-4">
+                      <span className="font-syne font-bold text-base sm:text-lg text-white">
                         {item.question}
                       </span>
-                      <div className={`p-1 text-neutral-400 transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180 text-[#E60000]' : ''}`}>
-                        <ChevronDown className="w-5 h-5" />
-                      </div>
+                      <ChevronDown
+                        className={`w-5 h-5 text-[#E60000] transition-transform duration-300 shrink-0 ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                      />
                     </button>
                     {isOpen && (
-                      <div className="px-6 pb-6 pt-1 text-sm font-epilogue text-neutral-300 leading-relaxed border-t border-[#262626]/50">
-                        <p>{item.answer}</p>
+                      <div className="px-6 pb-6 pt-0 font-epilogue text-neutral-300 text-sm sm:text-base leading-relaxed border-t border-[#262626]/50 pt-4">
+                        {item.answer}
                       </div>
                     )}
                   </div>
@@ -923,153 +862,94 @@ export default function App() {
             </div>
           </div>
         </section>
+
       </main>
 
       {/* ----------------- FOOTER ----------------- */}
-      <footer className="bg-[#0A0A0A] border-t border-[#262626] relative overflow-hidden">
-        {/* Bloco de conversão centralizado */}
-        <div className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-b border-[#262626] relative">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-[#E60000]/10 rounded-full blur-[140px] pointer-events-none"
-            aria-hidden="true"
-          />
-
-          <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
-            <div className="inline-flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#E60000]" />
-              <span className="text-xs font-syne font-bold uppercase tracking-[0.25em] text-[#E60000]">
-                Inicie Sua Transformação
-              </span>
-            </div>
-
-            <h2 className="font-syne text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white text-balance">
-              Sua ideia merece uma arte exclusiva e irrepetível.
-            </h2>
-
-            <p className="font-epilogue text-neutral-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-              Consulte disponibilidade de agenda, tire dúvidas técnicas e receba uma orientação autoral sob medida diretamente com nossos tatuadores.
-            </p>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href={STUDIO_CONFIG.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-xs sm:text-sm uppercase font-syne font-bold tracking-wider bg-[#E60000] hover:bg-[#CC0000] text-white transition-all shadow-xl shadow-[#E60000]/30 cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Iniciar Orçamento pelo WhatsApp</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
-
-              <button
-                onClick={() => scrollToQuote()}
-                className="w-full sm:w-auto px-8 py-4 text-xs sm:text-sm uppercase font-syne font-bold tracking-wider text-white border-2 border-white hover:border-[#E60000] hover:bg-white hover:text-black transition-all cursor-pointer"
-              >
-                Simular Orçamento no Site
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Rodapé institucional com Instagram e WhatsApp */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14">
+      <footer className="bg-[#050505] border-t border-[#262626] py-16 text-neutral-400">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-[#262626]">
+            
             <div className="md:col-span-5 space-y-4">
-              <span className="font-syne text-3xl font-extrabold tracking-widest text-[#E60000] block">
+              <span className="font-syne text-3xl font-extrabold tracking-widest text-[#E60000]">
                 {STUDIO_CONFIG.name}
               </span>
-              <p className="text-xs font-syne font-semibold uppercase tracking-[0.2em] text-neutral-400">
-                {STUDIO_CONFIG.tagline}
-              </p>
               <p className="font-epilogue text-sm text-neutral-400 max-w-sm leading-relaxed">
-                Estúdio de tatuagem focado em arte autoral, peças exclusivas e atendimento individualizado.
+                {STUDIO_CONFIG.fullName} · {STUDIO_CONFIG.tagline}. Estúdio especializado em projetos autorais, fine line, dark art e alta precisão em Florianópolis.
               </p>
-
               <div className="flex items-center gap-3 pt-2">
                 <a
                   href={STUDIO_CONFIG.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 bg-[#121212] border border-[#262626] text-neutral-300 hover:text-white hover:border-[#E60000] hover:bg-[#E60000]/10 transition-colors"
-                  aria-label="Instagram da Abarr Tattoo"
+                  aria-label="Instagram"
+                  className="p-2.5 bg-[#121212] border border-[#262626] text-white hover:border-[#E60000] hover:text-[#E60000] transition-colors"
                 >
-                  <Instagram className="w-4 h-4 text-[#E60000]" />
-                  <span className="text-xs font-epilogue">{STUDIO_CONFIG.instagramHandle}</span>
+                  <Instagram className="w-5 h-5" />
                 </a>
-
                 <a
                   href={STUDIO_CONFIG.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 bg-[#121212] border border-[#262626] text-neutral-300 hover:text-white hover:border-[#E60000] hover:bg-[#E60000]/10 transition-colors"
-                  aria-label="WhatsApp da Abarr Tattoo"
+                  aria-label="WhatsApp"
+                  className="p-2.5 bg-[#121212] border border-[#262626] text-white hover:border-[#E60000] hover:text-[#E60000] transition-colors"
                 >
-                  <MessageCircle className="w-4 h-4 text-[#E60000]" />
-                  <span className="text-xs font-epilogue">WhatsApp Direto</span>
+                  <MessageCircle className="w-5 h-5" />
                 </a>
               </div>
             </div>
 
-            <div className="md:col-span-3 space-y-4">
-              <h4 className="font-syne text-xs uppercase font-bold tracking-widest text-neutral-400">
-                Navegação
+            <div className="md:col-span-4 space-y-3">
+              <h4 className="font-syne font-bold text-sm uppercase tracking-wider text-white">
+                Contato & Atendimento
               </h4>
-              <ul className="space-y-2.5 text-xs font-epilogue text-neutral-400">
-                <li>
-                  <a href="#portfolio" className="hover:text-white transition-colors">
-                    Portfólio & Obras
-                  </a>
+              <ul className="space-y-2 font-epilogue text-sm">
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-[#E60000] shrink-0" />
+                  <span>{STUDIO_CONFIG.phoneFormatted}</span>
                 </li>
-                <li>
-                  <a href="#processo" className="hover:text-white transition-colors">
-                    Do Esboço à Cicatrização
-                  </a>
+                <li className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#E60000] shrink-0" />
+                  <span>{STUDIO_CONFIG.location}</span>
                 </li>
-                <li>
-                  <a href="#orcamento" className="hover:text-white transition-colors">
-                    Simulador de Orçamento
-                  </a>
-                </li>
-                <li>
-                  <a href="#duvidas" className="hover:text-white transition-colors">
-                    Dúvidas Frequentes
-                  </a>
+                <li className="flex items-start gap-2 pt-1">
+                  <Clock className="w-4 h-4 text-[#E60000] shrink-0 mt-0.5" />
+                  <span className="text-xs text-neutral-400">{STUDIO_CONFIG.hours}</span>
                 </li>
               </ul>
             </div>
 
-            <div className="md:col-span-4 space-y-4">
-              <h4 className="font-syne text-xs uppercase font-bold tracking-widest text-neutral-400">
-                Localização & Atendimento
+            <div className="md:col-span-3 space-y-3">
+              <h4 className="font-syne font-bold text-sm uppercase tracking-wider text-white">
+                Navegação Rápida
               </h4>
-              <div className="space-y-3 text-xs font-epilogue text-neutral-300">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-[#E60000] shrink-0 mt-0.5" />
-                  <span>{STUDIO_CONFIG.location}</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Phone className="w-4 h-4 text-[#E60000] shrink-0 mt-0.5" />
-                  <a href={STUDIO_CONFIG.whatsappUrl} className="hover:text-white transition-colors">
-                    {STUDIO_CONFIG.phoneFormatted}
-                  </a>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Clock className="w-4 h-4 text-[#E60000] shrink-0 mt-0.5" />
-                  <span className="text-neutral-400">{STUDIO_CONFIG.hours}</span>
-                </div>
-              </div>
+              <ul className="space-y-2 font-epilogue text-sm">
+                <li>
+                  <a href="#portfolio" className="hover:text-white transition-colors">Portfólio Selecionado</a>
+                </li>
+                <li>
+                  <a href="#processo" className="hover:text-white transition-colors">Processo Autoral</a>
+                </li>
+                <li>
+                  <button onClick={() => scrollToQuote()} className="hover:text-white transition-colors text-left cursor-pointer">
+                    Orçamento Gratuito
+                  </button>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-white transition-colors">Dúvidas Frequentes</a>
+                </li>
+              </ul>
             </div>
+
           </div>
 
-          <div className="mt-14 pt-8 border-t border-[#262626] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-epilogue text-neutral-500">
-            <p>© 2026 {STUDIO_CONFIG.fullName}. Todos os direitos reservados.</p>
-            <p className="text-[11px] text-neutral-500">
-              Dark Premium · Tatuagens Autorais Exclusivas · Florianópolis/SC
-            </p>
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 font-epilogue gap-4">
+            <p>© {new Date().getFullYear()} {STUDIO_CONFIG.fullName}. Todos os direitos reservados.</p>
+            <p className="text-neutral-600">Desenvolvido com foco em alta conversão e arte exclusiva.</p>
           </div>
         </div>
       </footer>
+
     </div>
   );
 }
