@@ -1,0 +1,8 @@
+{
+  "name": "Abarr Tattoo | Tatuagens Exclusivas e Autorais",
+  "description": "Landing page de alta conversão para o estúdio de tatuagem Abarr Tattoo. Identidade Dark Premium, artes autorais exclusivas e biossegurança de nível cirúrgico.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
