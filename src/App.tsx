@@ -1,25 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowRight,
   MessageCircle,
   Maximize2,
   X,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Instagram,
   MapPin,
   Phone,
   Clock,
   ArrowUpRight,
+  Sparkles,
 } from 'lucide-react';
 
 /* ==========================================================================
-   IMPORTAÇÃO CORRETA DAS IMAGENS (PADRÃO VITE)
+   IMPORTAÇÃO DAS FOTOS REAIS (PASTA: src/assets/images/portfolio)
    ========================================================================== */
 import heroImg from './assets/images/hero_tattoo_machine_1791466303298.jpg';
-import blackworkImg from './assets/images/tattoo_blackwork_geo_1791466340220.jpg';
-import darkartImg from './assets/images/tattoo_darkart_neo_1791466331279.jpg';
-import finelineImg from './assets/images/tattoo_fineline_micro_1791466316805.jpg';
-import studioImg from './assets/images/tattoo_studio_suite_1791466348679.jpg';
+
+import tattoo01Lua from './assets/images/portfolio/lua perna.jpeg';
+import tattoo02Resiliencia from './assets/images/portfolio/resiliencia pescoço.jpeg';
+import tattoo03Fe from './assets/images/portfolio/minha tatto braço.jpeg';
+import tattoo04Floral from './assets/images/portfolio/tatto braço flores 01.jpeg';
+import tattoo05Pets from './assets/images/portfolio/antebraço cachorro.jpeg';
+import tattoo06Cartoon from './assets/images/portfolio/desenho pato.jpeg';
+import tattoo07Costas from './assets/images/portfolio/crossfit tatto.jpeg';
+import tattoo08Lettering from './assets/images/portfolio/tatuagem cursiva perna.jpeg';
+import tattoo09Coluna from './assets/images/portfolio/costas mae tatto.jpeg';
+import tattoo10Lirios from './assets/images/portfolio/braço chinês.jpeg';
 
 /* ==========================================================================
    CONFIGURAÇÕES & DADOS DO ESTÚDIO
@@ -40,76 +50,153 @@ const STUDIO_CONFIG = {
 const HERO_IMAGE_PRIMARY = heroImg;
 const HERO_IMAGE_FALLBACK = 'https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=1200&auto=format&fit=crop';
 
-interface PortfolioItem {
+export interface PortfolioItem {
   id: string;
   title: string;
-  category: 'fineline' | 'darkart' | 'blackwork';
+  category: 'fineline' | 'darkart' | 'blackwork' | 'lettering';
   categoryLabel: string;
   image: string;
-  fallbackImage: string;
   alt: string;
   description: string;
   sessionTime: string;
   technique: string;
-  healedMonths: number;
+  healingText: string;
+  bodyPlacement: string;
 }
 
+/* ==========================================================================
+   MAPEAMENTO DAS 10 OBRAS DO PORTFÓLIO
+   ========================================================================== */
 const PORTFOLIO_ITEMS: PortfolioItem[] = [
   {
-    id: 'fineline-botanical',
-    title: 'Flora & Geometria Cósmica',
+    id: 'fases-lua',
+    title: 'Fases da Lua & Constância',
     category: 'fineline',
-    categoryLabel: 'Fine Line & Microrealismo',
-    image: finelineImg,
-    fallbackImage: 'https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?q=80&w=1000&auto=format&fit=crop',
-    alt: 'Tatuagem Fine Line botânica e geometria cósmica no antebraço',
-    description:
-      'Linhas ultra-finas de agulha 03RL com micro-sombreamento stippling. Projeto desenvolvido sob medida para a anatomia do antebraço.',
-    sessionTime: '3h 40min',
-    technique: 'Agulha 03RL · Pigmento Carbon Black',
-    healedMonths: 4,
+    categoryLabel: 'Fine Line & Caligrafia',
+    image: tattoo01Lua,
+    alt: 'Tatuagem das fases da lua com escrita na coxa',
+    description: 'Composição minimalista com micropontilhismo nas texturas lunares e caligrafia fluida. Projeto focado no fluxo da perna.',
+    sessionTime: '2h 15min',
+    technique: 'Agulha 03RL · Sombreamento Stippling',
+    healingText: 'Cicatrizada há 5 meses',
+    bodyPlacement: 'Coxa / Perna',
   },
   {
-    id: 'darkart-corvo',
-    title: 'Crânio de Corvo Barroco',
-    category: 'darkart',
-    categoryLabel: 'Dark Art & Neo-trad',
-    image: darkartImg,
-    fallbackImage: 'https://images.unsplash.com/photo-1562962230-16e4623d36e6?q=80&w=1000&auto=format&fit=crop',
-    alt: 'Tatuagem Dark Art de crânio com detalhes barrocos no ombro',
-    description:
-      'Composição autoral com alto contraste, negros densos e sutil toque de pigmento carmim nos detalhes ornamentais.',
-    sessionTime: '5h 15min',
-    technique: 'Blackwork Denso · Sombreamento Opaque Grey',
-    healedMonths: 6,
+    id: 'resiliencia-pescoco',
+    title: 'Resiliência Lateral',
+    category: 'lettering',
+    categoryLabel: 'Lettering & Fine Line',
+    image: tattoo02Resiliencia,
+    alt: 'Tatuagem de palavra Resiliência escrita no pescoço',
+    description: 'Lettering delicado em curva anatômica no pescoço. Traço contínuo com precisão para evitar expansão no local.',
+    sessionTime: '1h 30min',
+    technique: 'Agulha 01RL Única · Tinta Carbon Black',
+    healingText: 'Cicatrizada há 3 meses',
+    bodyPlacement: 'Pescoço / Lateral',
   },
   {
-    id: 'blackwork-mandala',
-    title: 'Mandala & Padrão Geométrico Sagrado',
+    id: 'fe-yeshua-braco',
+    title: 'Fechamento Sacro & Yeshua',
     category: 'blackwork',
-    categoryLabel: 'Blackwork & Geometria',
-    image: blackworkImg,
-    fallbackImage: 'https://images.unsplash.com/photo-1590246814883-578336f6ee61?q=80&w=1000&auto=format&fit=crop',
-    alt: 'Tatuagem de mandala e geometria sagrada no peito e ombro',
-    description:
-      'Encaixe anatômico fluindo entre deltóide e peitoral. Precisão milimétrica em pontilhismo graduado e pretos sólidos.',
-    sessionTime: '6h 30min',
-    technique: 'Dotwork 05RL & Preenchimento Magnum',
-    healedMonths: 8,
+    categoryLabel: 'Preto & Cinza Realista',
+    image: tattoo03Fe,
+    alt: 'Tatuagem sacra com pomba da paz, mãos da criação, cruzes e Yeshua no antebraço',
+    description: 'Projeto autoral religioso com alto contraste, fumaça fluida e transições de preto sólido a cinzas suaves.',
+    sessionTime: '6h 00min',
+    technique: 'Sombra Rastelada · Agulhas Magnum 15RM',
+    healingText: 'Cicatrizada há 8 meses',
+    bodyPlacement: 'Antebraço Completo',
   },
   {
-    id: 'studio-craft',
-    title: 'Execução & Precisão em Agulha Única',
+    id: 'floral-ombro',
+    title: 'Lírios em Vermelho & Preto',
     category: 'fineline',
-    categoryLabel: 'Precisão & Técnica',
-    image: studioImg,
-    fallbackImage: 'https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?q=80&w=1000&auto=format&fit=crop',
-    alt: 'Mão com luva preta segurando máquina rotativa executando traço',
-    description:
-      'Controle de profundidade dérmica com estabilidade estrita, prevenindo expansão ou estouro de traço ao longo dos anos.',
-    sessionTime: 'Controle Cirúrgico',
-    technique: 'Motor Direct Drive · Tensão 6.8V',
-    healedMonths: 2,
+    categoryLabel: 'Fine Line & Botanical Red',
+    image: tattoo04Floral,
+    alt: 'Tatuagem de lírios pretos com linhas vermelhas orgânicas no ombro e braço',
+    description: 'Fluxo botânico que abraça o deltóide com linhas pretas finas e fios de pigmento vermelho contrastante.',
+    sessionTime: '4h 10min',
+    technique: 'Agulhas 03RL & 05RL · Pigmento Carmine Red',
+    healingText: 'Cicatrizada há 4 meses',
+    bodyPlacement: 'Ombro / Braço',
+  },
+  {
+    id: 'pets-patinha',
+    title: 'Homenagem Pet & Afeto',
+    category: 'fineline',
+    categoryLabel: 'Micro-realismo & Fine Line',
+    image: tattoo05Pets,
+    alt: 'Três ilustrações de cachorrinho e patinha no antebraço',
+    description: 'Trilogia afetiva com silhueta de pata, dorso e carinha espreitando. Traços ultra-finos com toque sutil de cor.',
+    sessionTime: '2h 40min',
+    technique: 'Micro-traço 03RL · Pigmento Hipoalergênico',
+    healingText: 'Cicatrizada há 6 meses',
+    bodyPlacement: 'Antebraço Interno',
+  },
+  {
+    id: 'cartoon-neo-trad',
+    title: 'Lola Bunny & Tio Patinhas',
+    category: 'darkart',
+    categoryLabel: 'Neo Tradicional & Blackwork',
+    image: tattoo06Cartoon,
+    alt: 'Tatuagem de personagem de desenho animado Lola Bunny e Tio Patinhas na coxa',
+    description: 'Peça marcante em preto e cinza com linhas externas pesadas (outerlines) e sombreamento aveludado.',
+    sessionTime: '5h 30min',
+    technique: 'Outline 09RL · Preenchimento Grey Wash',
+    healingText: 'Cicatrizada há 2 meses',
+    bodyPlacement: 'Coxa Lateral',
+  },
+  {
+    id: 'costas-proposito',
+    title: 'Propósito & Liberdade',
+    category: 'fineline',
+    categoryLabel: 'Fine Line & Ilustrativo',
+    image: tattoo07Costas,
+    alt: 'Tatuagem de mãe e filha com barra de musculação, montanhas e mar nas costas',
+    description: 'Painel emotivo autoral integrando figura humana, natureza, esportes e lettering sutil centralizado nas costas.',
+    sessionTime: '5h 00min',
+    technique: 'Traço Misto 03RL & 07RL · Fine Line',
+    healingText: 'Cicatrizada há 7 meses',
+    bodyPlacement: 'Costas Superior',
+  },
+  {
+    id: 'lettering-angels',
+    title: 'Angels Watching Over Me',
+    category: 'lettering',
+    categoryLabel: 'Chicano Lettering & Caligrafia',
+    image: tattoo08Lettering,
+    alt: 'Tatuagem em caligrafia gigante cobrindo a perna inteira',
+    description: 'Lettering autoral de grande porte com sombras projetadas, efeito 3D no contorno e fluidez com a musculatura da perna.',
+    sessionTime: '7h 30min',
+    technique: 'Custom Script · Sombra Suave Magnum',
+    healingText: 'Recém-finalizada (Sessão Única)',
+    bodyPlacement: 'Perna Completa / Canela',
+  },
+  {
+    id: 'coluna-ornamental',
+    title: 'Lótus & Unalome Ornamental',
+    category: 'fineline',
+    categoryLabel: 'Ornamental & Geometria',
+    image: tattoo09Coluna,
+    alt: 'Tatuagem ornamental geométrica ao longo de toda a coluna vertebral com flor de lótus',
+    description: 'Simetria impecável acompanhando o eixo da coluna vertebral. Geometria sagrada, lótus e elementos místicos em Fine Line.',
+    sessionTime: '3h 50min',
+    technique: 'Precisão Simétrica · Agulha 03RL',
+    healingText: 'Cicatrizada há 9 meses',
+    bodyPlacement: 'Coluna Vertebral',
+  },
+  {
+    id: 'lirios-simbolo-chines',
+    title: 'Amor & Flores Orientais',
+    category: 'fineline',
+    categoryLabel: 'Fine Line & Caligrafia Oriental',
+    image: tattoo10Lirios,
+    alt: 'Tatuagem de lírio com caractere chinês de Amor em vermelho no ombro',
+    description: 'Fusão de caligrafia oriental em tinta carmim sólida com ilustração botânica detalhada de lírios no deltóide.',
+    sessionTime: '4h 00min',
+    technique: 'Caligrafia Vermelha · Micro-pontilhismo',
+    healingText: 'Cicatrizada há 3 meses',
+    bodyPlacement: 'Ombro / Peitoral',
   },
 ];
 
@@ -117,90 +204,78 @@ const PROCESS_STEPS = [
   {
     step: '01',
     title: 'Briefing & Consulta Inicial',
-    description:
-      'Conversamos pelo WhatsApp para entender sua ideia, referências estéticas, local anatômico e proporções desejadas.',
+    description: 'Conversamos pelo WhatsApp para entender sua ideia, referências estéticas, local anatômico e proporções desejadas.',
   },
   {
     step: '02',
     title: 'Criação Autoral & Validação',
-    description:
-      'Criamos uma arte exclusiva desenhada para seu corpo. Você visualiza a prévia, ajusta detalhes e aprova antes de qualquer agulhada.',
+    description: 'Criamos uma arte exclusiva desenhada para seu corpo. Você visualiza a prévia, ajusta detalhes e aprova antes da sessão.',
   },
   {
     step: '03',
     title: 'A Sessão no Estúdio',
-    description:
-      'Ambiente privativo e climatizado com música agradável, ergonomia de alto nível e todos os protocolos de assepsia rigorosamente aplicados.',
+    description: 'Ambiente privativo e climatizado, ergonomia de alto nível e todos os protocolos de assepsia aplicados rigorosamente.',
   },
   {
     step: '04',
-    title: 'Guia Pós-Tatuagem & Acompanhamento',
-    description:
-      'Entregamos o protocolo completo de cicatrização (filme adesivo dérmico, pomadas indicadas) com suporte direto pelo WhatsApp até a cicatrização completa.',
+    title: 'Guia Pós-Tatuagem & Suporte',
+    description: 'Entregamos o protocolo completo de cicatrização com acompanhamento direto pelo WhatsApp até a regeneração total.',
   },
 ];
 
 const FAQ_ITEMS = [
   {
     question: 'Como funciona o orçamento gratuito com a Abarr Tattoo?',
-    answer:
-      'É direto e sem burocracia. Você pode preencher o simulador aqui no site ou mandar uma mensagem no WhatsApp (+55 48 99246-1205) com a ideia, tamanho aproximado em centímetros e local do corpo. Nós analisamos a complexidade e retornamos com valores e opções de agenda.',
+    answer: 'É direto e sem burocracia. Pode preencher o simulador aqui no site ou mandar uma mensagem no WhatsApp com a ideia, tamanho aproximado em centímetros e local do corpo. Analisamos a complexidade e retornamos com valores e opções de agenda.',
   },
   {
-    question: 'As artes são realmente exclusivas ou vocês tatuam cópias da internet?',
-    answer:
-      'Nosso foco é arte autoral e exclusiva. Referências do Pinterest ou Instagram servem como ponto de partida conceitual, mas desenvolvemos uma peça única para você que respeita sua musculatura e anatomia.',
+    question: 'As artes são realmente exclusivas ou vocês copiam da internet?',
+    answer: 'Nosso foco é arte autoral e exclusiva. Referências do Pinterest servem como ponto de partida conceitual, mas desenvolvemos uma peça única criada especificamente para a sua anatomia.',
   },
   {
-    question: 'É a minha primeira tatuagem. O que preciso saber sobre dor e preparação?',
-    answer:
-      'A sensação varia de acordo com o local, mas nossa equipe orienta cada detalhe: dormir bem na noite anterior, alimentação reforçada, hidratação da pele prévia e pausas programadas durante a sessão para seu conforto total.',
+    question: 'É a minha primeira tatuagem. Como me preparar para a sessão?',
+    answer: 'Nossa equipe orienta cada detalhe: dormir bem na noite anterior, alimentar-se bem, hidratar a pele nos dias anteriores e fazer pausas confortáveis durante a sessão.',
   },
   {
-    question: 'Vocês fazem cobertura de tatuagem antiga (cover-up) ou de cicatrizes?',
-    answer:
-      'Sim. Avaliamos a viabilidade anatômica e tonalidade da tatuagem antiga ou cicatriz em uma consulta prévia para criar um projeto autoral que neutralize a arte anterior de forma estética e definitiva.',
+    question: 'Vocês fazem cobertura de tatuagens antigas (cover-up) ou cicatrizes?',
+    answer: 'Sim. Avaliamos a viabilidade anatômica e tonalidade para criar um projeto autoral que harmonize e cubra a arte anterior de forma estética e definitiva.',
   },
 ];
 
 const BODY_PLACEMENTS = [
   'Antebraço',
-  'Braço / Bíceps',
-  'Ombro / Deltóide',
-  'Peitoral',
-  'Costela / Tronco',
-  'Costas',
+  'Braço / Ombro',
+  'Costas / Coluna',
+  'Peitoral / Tronco',
+  'Pescoço / Lateral',
   'Coxa / Perna',
-  'Panturrilha',
-  'Punho / Mão',
-  'Tornozelo / Pé',
+  'Canela / Tornozelo',
+  'Mão / Punho',
 ];
 
 const TATTOO_STYLES = [
-  { id: 'fineline', label: 'Fine Line & Microrealismo', hint: 'Traços sutis e delicados' },
-  { id: 'darkart', label: 'Dark Art & Neo-tradicional', hint: 'Contrastes e estética marcante' },
-  { id: 'blackwork', label: 'Blackwork & Geometria', hint: 'Pretos sólidos e padronagens' },
-  { id: 'lettering', label: 'Lettering & Caligrafia', hint: 'Fontes e composições autorais' },
-  { id: 'coverup', label: 'Cobertura (Cover-up)', hint: 'Reforma ou cobertura de tattoo anterior' },
+  { id: 'fineline', label: 'Fine Line & Microrealismo', hint: 'Traços finos, delicados e botânicos' },
+  { id: 'darkart', label: 'Dark Art & Neo-tradicional', hint: 'Contrastes fortes e traços marcantes' },
+  { id: 'blackwork', label: 'Blackwork & Preto e Cinza', hint: 'Sombra aveludada e pretos densos' },
+  { id: 'lettering', label: 'Lettering & Caligrafia', hint: 'Fontes autorais e escrita fluida' },
 ];
-
-/* ==========================================================================
-   COMPONENTE PRINCIPAL (APP)
-   ========================================================================== */
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedModalItem, setSelectedModalItem] = useState<PortfolioItem | null>(null);
+  
   const [selectedPlacement, setSelectedPlacement] = useState<string>('Antebraço');
   const [selectedStyle, setSelectedStyle] = useState<string>('fineline');
   const [sizeRange, setSizeRange] = useState<string>('10 a 15 cm');
   const [ideaText, setIdeaText] = useState<string>('');
-  const [preferredPeriod, setPreferredPeriod] = useState<string>('Tarde');
+  const [preferredPeriod, setPreferredPeriod] = useState<string>('Tarde (14h-18h)');
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
-  const [heroImgSrc, setHeroImgSrc] = useState(HERO_IMAGE_PRIMARY);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -221,16 +296,43 @@ export default function App() {
   };
 
   const categories = [
-    { id: 'all', label: 'Todas as Obras' },
+    { id: 'all', label: 'Todas as Obras (10)' },
     { id: 'fineline', label: 'Fine Line & Micro' },
-    { id: 'darkart', label: 'Dark Art & Neo' },
-    { id: 'blackwork', label: 'Blackwork & Geometria' },
+    { id: 'lettering', label: 'Lettering & Escrita' },
+    { id: 'blackwork', label: 'Preto & Cinza' },
+    { id: 'darkart', label: 'Neo Trad & Dark' },
   ];
 
   const filteredPortfolio =
     activeCategory === 'all'
       ? PORTFOLIO_ITEMS
       : PORTFOLIO_ITEMS.filter((item) => item.category === activeCategory);
+
+  const updateScrollState = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    updateScrollState();
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }, [activeCategory]);
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = carouselRef.current.clientWidth * 0.8;
+      carouselRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+      setTimeout(updateScrollState, 350);
+    }
+  };
 
   const currentStyleObj =
     TATTOO_STYLES.find((s) => s.id === selectedStyle) || TATTOO_STYLES[0];
@@ -256,12 +358,16 @@ export default function App() {
     <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-[#E60000] selection:text-white font-epilogue antialiased overflow-x-hidden">
       
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne:wght@500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne:wght@500;600;700;800&display=swap');
         .font-syne { font-family: 'Syne', sans-serif !important; }
         .font-epilogue { font-family: 'Epilogue', sans-serif !important; }
+        .font-cta { font-family: 'Bricolage Grotesque', sans-serif !important; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      {/* ----------------- NAVBAR ----------------- */}
+      {/* NAVBAR */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
@@ -280,7 +386,7 @@ export default function App() {
             <div className="hidden sm:block">
               <button
                 onClick={() => scrollToQuote()}
-                className="px-5 sm:px-6 py-2.5 sm:py-3 text-xs uppercase font-syne font-extrabold tracking-widest text-white border-2 border-white hover:border-[#E60000] hover:bg-[#E60000] transition-all duration-200 cursor-pointer shadow-lg shadow-black/40"
+                className="font-cta px-6 py-3 text-xs uppercase tracking-wider font-extrabold text-white border-2 border-white hover:border-[#E60000] hover:bg-[#E60000] transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[#E60000]/30"
               >
                 Orçamento Gratuito
               </button>
@@ -290,16 +396,10 @@ export default function App() {
       </header>
 
       <main>
-        {/* ----------------- HERO SECTION ----------------- */}
+        {/* HERO */}
         <section className="relative min-h-[88vh] flex items-center pt-24 pb-16 lg:pt-32 lg:pb-20 overflow-hidden border-b border-[#262626]">
-          <div
-            className="absolute top-1/4 -left-36 w-[500px] h-[500px] bg-[#E60000]/12 rounded-full blur-[160px] pointer-events-none"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute bottom-10 right-0 w-[550px] h-[550px] bg-[#E60000]/10 rounded-full blur-[180px] pointer-events-none"
-            aria-hidden="true"
-          />
+          <div className="absolute top-1/4 -left-36 w-[500px] h-[500px] bg-[#E60000]/12 rounded-full blur-[160px] pointer-events-none" aria-hidden="true" />
+          <div className="absolute bottom-10 right-0 w-[550px] h-[550px] bg-[#E60000]/10 rounded-full blur-[180px] pointer-events-none" aria-hidden="true" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
@@ -319,19 +419,19 @@ export default function App() {
                 <div className="flex flex-col items-stretch sm:items-start gap-3.5 pt-1 w-full max-w-md">
                   <button
                     onClick={() => scrollToQuote()}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-xs sm:text-sm uppercase font-syne font-extrabold tracking-widest text-white border-2 border-white hover:border-[#E60000] hover:bg-[#E60000] transition-all duration-200 cursor-pointer shadow-xl shadow-black/50"
+                    className="font-cta group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-sm sm:text-base uppercase font-bold tracking-wider text-white border-2 border-white hover:border-[#E60000] hover:bg-[#E60000] transition-all duration-300 cursor-pointer shadow-xl hover:shadow-[#E60000]/40"
                   >
                     <span>Fazer Orçamento Gratuito</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
                   </button>
 
                   <a
                     href={STUDIO_CONFIG.whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-xs sm:text-sm uppercase font-syne font-extrabold tracking-widest text-white border-2 border-white/80 hover:border-white bg-[#0A0A0A] hover:bg-white hover:text-black transition-all duration-200"
+                    className="font-cta group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-sm uppercase font-bold tracking-wider text-white border-2 border-white/80 hover:border-white bg-[#0A0A0A] hover:bg-white hover:text-black transition-all duration-300"
                   >
-                    <MessageCircle className="w-4 h-4 text-[#E60000] group-hover:text-black transition-colors" />
+                    <MessageCircle className="w-5 h-5 text-[#E60000] group-hover:text-black transition-colors" />
                     <span>Iniciar Orçamento pelo WhatsApp</span>
                   </a>
                 </div>
@@ -343,24 +443,19 @@ export default function App() {
                     <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#E60000] transition-colors duration-300 pointer-events-none z-20" />
                     
                     <img
-                      src={heroImgSrc}
-                      onError={() => setHeroImgSrc(HERO_IMAGE_FALLBACK)}
-                      alt="Close-up fotográfico de estúdio: máquina de tatuagem de precisão empunhada com luva cirúrgica preta"
-                      referrerPolicy="no-referrer"
+                      src={HERO_IMAGE_PRIMARY}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = HERO_IMAGE_FALLBACK;
+                      }}
+                      alt="Close-up de estúdio: máquina de tatuagem de precisão"
                       className="w-full h-auto max-h-[480px] sm:max-h-[520px] lg:max-h-[550px] aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3.8] object-cover filter contrast-[1.08] brightness-95 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  <div
-                    className="absolute -bottom-3 -right-3 w-14 h-14 border-r-2 border-b-2 border-[#E60000] pointer-events-none"
-                    aria-hidden="true"
-                  />
-                  <div
-                    className="absolute -top-3 -left-3 w-14 h-14 border-l-2 border-t-2 border-[#E60000]/80 pointer-events-none"
-                    aria-hidden="true"
-                  />
+                  <div className="absolute -bottom-3 -right-3 w-14 h-14 border-r-2 border-b-2 border-[#E60000] pointer-events-none" aria-hidden="true" />
+                  <div className="absolute -top-3 -left-3 w-14 h-14 border-l-2 border-t-2 border-[#E60000]/80 pointer-events-none" aria-hidden="true" />
                 </div>
               </div>
 
@@ -368,35 +463,36 @@ export default function App() {
           </div>
         </section>
 
-        {/* ----------------- PORTFÓLIO BENTO GRID ----------------- */}
-        <section id="portfolio" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative">
+        {/* PORTFÓLIO VITRINE / CARROSSEL */}
+        <section id="portfolio" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
+            
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-[#E60000]" />
                   <p className="text-xs font-syne font-bold uppercase tracking-[0.2em] text-[#E60000]">
-                    Portfólio Selecionado
+                    Vitrine de Obras Autorais
                   </p>
                 </div>
                 <h2 className="font-syne text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white text-balance">
-                  Identidade e Precisão.
+                  Identidade, Precisão & Arte.
                 </h2>
                 <p className="font-epilogue text-neutral-400 text-sm sm:text-base max-w-xl">
-                  Projetos exclusivos concebidos do zero para a anatomia de cada cliente. Sem reproduções da internet ou cópias genéricas.
+                  Explore nossos trabalhos mais recentes. Deslize para navegar pelas obras exclusivas criadas para a anatomia de cada cliente.
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[#121212] border border-[#262626]">
+              <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-[#121212] border border-[#262626]">
                 {categories.map((cat) => {
                   const isActive = activeCategory === cat.id;
                   return (
                     <button
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`px-3 sm:px-4 py-2 text-xs font-syne uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                      className={`px-3.5 py-2 text-xs font-syne uppercase tracking-wider font-bold transition-all cursor-pointer whitespace-nowrap ${
                         isActive
-                          ? 'bg-white text-black shadow-md'
+                          ? 'bg-[#E60000] text-white shadow-lg shadow-[#E60000]/30'
                           : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
                       }`}
                     >
@@ -407,164 +503,100 @@ export default function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
-              
-              <div
-                onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[0])}
-                className="md:col-span-7 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
+            <div className="relative group/carousel">
+              <button
+                onClick={() => scrollCarousel('left')}
+                disabled={!canScrollLeft}
+                className={`hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-[#0A0A0A]/90 border border-[#262626] text-white items-center justify-center transition-all duration-300 hover:border-[#E60000] hover:bg-[#E60000] shadow-2xl ${
+                  !canScrollLeft ? 'opacity-30 cursor-not-allowed' : 'opacity-100 cursor-pointer'
+                }`}
+                aria-label="Anterior"
               >
-                <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden">
-                  <img
-                    src={PORTFOLIO_ITEMS[0].image}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[0].fallbackImage;
-                    }}
-                    alt={PORTFOLIO_ITEMS[0].alt}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/30 to-transparent" />
-                  <div className="absolute top-4 right-4 p-2 bg-[#0A0A0A]/80 border border-[#262626] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Maximize2 className="w-4 h-4 text-[#E60000]" />
-                  </div>
-                </div>
+                <ChevronLeft className="w-6 h-6" />
+              </button>
 
-                <div className="p-6 sm:p-8 space-y-3 relative -mt-12 sm:-mt-16 z-10">
-                  <div className="flex items-center gap-2 text-xs text-neutral-400 font-epilogue">
-                    <span className="text-[#E60000] font-syne font-bold uppercase tracking-wider">
-                      {PORTFOLIO_ITEMS[0].categoryLabel}
-                    </span>
-                    <span>·</span>
-                    <span>Cicatrizada há {PORTFOLIO_ITEMS[0].healedMonths} meses</span>
-                  </div>
-                  <h3 className="font-syne text-2xl sm:text-3xl font-bold text-white group-hover:text-[#E60000] transition-colors">
-                    {PORTFOLIO_ITEMS[0].title}
-                  </h3>
-                  <p className="font-epilogue text-neutral-300 text-sm leading-relaxed">
-                    {PORTFOLIO_ITEMS[0].description}
-                  </p>
-                </div>
-              </div>
+              <button
+                onClick={() => scrollCarousel('right')}
+                disabled={!canScrollRight}
+                className={`hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-[#0A0A0A]/90 border border-[#262626] text-white items-center justify-center transition-all duration-300 hover:border-[#E60000] hover:bg-[#E60000] shadow-2xl ${
+                  !canScrollRight ? 'opacity-30 cursor-not-allowed' : 'opacity-100 cursor-pointer'
+                }`}
+                aria-label="Próximo"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
 
               <div
-                onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[1])}
-                className="md:col-span-5 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
+                ref={carouselRef}
+                onScroll={updateScrollState}
+                className="flex gap-6 overflow-x-auto snap-x snap-mandatory hide-scrollbar py-4 scroll-smooth"
               >
-                <div className="relative aspect-[3/4] sm:aspect-[4/4] overflow-hidden">
-                  <img
-                    src={PORTFOLIO_ITEMS[1].image}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[1].fallbackImage;
-                    }}
-                    alt={PORTFOLIO_ITEMS[1].alt}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/30 to-transparent" />
-                  <div className="absolute top-4 right-4 p-2 bg-[#0A0A0A]/80 border border-[#262626] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Maximize2 className="w-4 h-4 text-[#E60000]" />
-                  </div>
-                </div>
+                {filteredPortfolio.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedModalItem(item)}
+                    className="snap-start shrink-0 w-[85vw] sm:w-[360px] lg:w-[400px] bg-[#121212] border border-[#262626] hover:border-[#E60000]/70 transition-all duration-300 group overflow-hidden cursor-pointer flex flex-col justify-between shadow-xl"
+                  >
+                    <div className="relative aspect-[3/4] overflow-hidden bg-[#0A0A0A]">
+                      <img
+                        src={item.image}
+                        alt={item.alt}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent opacity-80" />
+                      
+                      <div className="absolute top-4 right-4 p-2 bg-[#0A0A0A]/85 border border-[#262626] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Maximize2 className="w-4 h-4 text-[#E60000]" />
+                      </div>
 
-                <div className="p-6 sm:p-8 space-y-3 relative -mt-12 z-10">
-                  <div className="flex items-center gap-2 text-xs text-neutral-400 font-epilogue">
-                    <span className="text-[#E60000] font-syne font-bold uppercase tracking-wider">
-                      {PORTFOLIO_ITEMS[1].categoryLabel}
-                    </span>
-                    <span>·</span>
-                    <span>{PORTFOLIO_ITEMS[1].sessionTime}</span>
+                      <div className="absolute top-4 left-4 px-2.5 py-1 bg-[#0A0A0A]/85 border border-[#262626] text-[10px] font-syne font-extrabold uppercase tracking-widest text-[#E60000]">
+                        {item.bodyPlacement}
+                      </div>
+                    </div>
+
+                    <div className="p-6 space-y-3 relative z-10 flex-1 flex flex-col justify-between">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-xs text-neutral-400 font-epilogue">
+                          <span className="text-[#E60000] font-syne font-bold uppercase tracking-wider">
+                            {item.categoryLabel}
+                          </span>
+                          <span>·</span>
+                          <span>{item.healingText}</span>
+                        </div>
+
+                        <h3 className="font-syne text-xl font-bold text-white group-hover:text-[#E60000] transition-colors">
+                          {item.title}
+                        </h3>
+
+                        <p className="font-epilogue text-neutral-300 text-xs leading-relaxed line-clamp-2">
+                          {item.description}
+                        </p>
+                      </div>
+
+                      <div className="pt-3 border-t border-[#262626] flex items-center justify-between text-xs text-neutral-400 font-epilogue">
+                        <span>Sessão: {item.sessionTime}</span>
+                        <span className="font-syne font-bold text-[#E60000] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                          Ver Obra <ArrowRight className="w-3.5 h-3.5" />
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="font-syne text-2xl font-bold text-white group-hover:text-[#E60000] transition-colors">
-                    {PORTFOLIO_ITEMS[1].title}
-                  </h3>
-                  <p className="font-epilogue text-neutral-300 text-sm leading-relaxed">
-                    {PORTFOLIO_ITEMS[1].description}
-                  </p>
-                </div>
+                ))}
               </div>
-
-              <div
-                onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[2])}
-                className="md:col-span-6 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img
-                    src={PORTFOLIO_ITEMS[2].image}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[2].fallbackImage;
-                    }}
-                    alt={PORTFOLIO_ITEMS[2].alt}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/30 to-transparent" />
-                  <div className="absolute top-4 right-4 p-2 bg-[#0A0A0A]/80 border border-[#262626] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Maximize2 className="w-4 h-4 text-[#E60000]" />
-                  </div>
-                </div>
-
-                <div className="p-6 sm:p-8 space-y-3 relative -mt-10 z-10">
-                  <div className="flex items-center gap-2 text-xs text-neutral-400 font-epilogue">
-                    <span className="text-[#E60000] font-syne font-bold uppercase tracking-wider">
-                      {PORTFOLIO_ITEMS[2].categoryLabel}
-                    </span>
-                    <span>·</span>
-                    <span>Cicatrizada há {PORTFOLIO_ITEMS[2].healedMonths} meses</span>
-                  </div>
-                  <h3 className="font-syne text-2xl font-bold text-white group-hover:text-[#E60000] transition-colors">
-                    {PORTFOLIO_ITEMS[2].title}
-                  </h3>
-                  <p className="font-epilogue text-neutral-300 text-sm leading-relaxed">
-                    {PORTFOLIO_ITEMS[2].description}
-                  </p>
-                </div>
-              </div>
-
-              <div
-                onClick={() => setSelectedModalItem(PORTFOLIO_ITEMS[3])}
-                className="md:col-span-6 group relative bg-[#121212] border border-[#262626] hover:border-[#E60000]/60 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img
-                    src={PORTFOLIO_ITEMS[3].image}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = PORTFOLIO_ITEMS[3].fallbackImage;
-                    }}
-                    alt={PORTFOLIO_ITEMS[3].alt}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/30 to-transparent" />
-                  <div className="absolute top-4 right-4 p-2 bg-[#0A0A0A]/80 border border-[#262626] text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Maximize2 className="w-4 h-4 text-[#E60000]" />
-                  </div>
-                </div>
-
-                <div className="p-6 sm:p-8 space-y-3 relative -mt-10 z-10">
-                  <div className="flex items-center gap-2 text-xs text-neutral-400 font-epilogue">
-                    <span className="text-[#E60000] font-syne font-bold uppercase tracking-wider">
-                      {PORTFOLIO_ITEMS[3].categoryLabel}
-                    </span>
-                    <span>·</span>
-                    <span>Precisão Dérmica</span>
-                  </div>
-                  <h3 className="font-syne text-2xl font-bold text-white group-hover:text-[#E60000] transition-colors">
-                    {PORTFOLIO_ITEMS[3].title}
-                  </h3>
-                  <p className="font-epilogue text-neutral-300 text-sm leading-relaxed">
-                    {PORTFOLIO_ITEMS[3].description}
-                  </p>
-                </div>
-              </div>
-
             </div>
+
+            <div className="mt-4 text-center md:hidden text-xs text-neutral-500 font-epilogue flex items-center justify-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#E60000]" />
+              <span>Arraste para os lados para explorar todas as obras</span>
+            </div>
+
           </div>
 
           {selectedModalItem && (
             <div
               role="dialog"
               aria-modal="true"
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-md"
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-md animate-fadeIn"
               onClick={() => setSelectedModalItem(null)}
             >
               <div
@@ -582,11 +614,7 @@ export default function App() {
                 <div className="md:w-1/2 bg-[#0A0A0A] flex items-center justify-center overflow-hidden">
                   <img
                     src={selectedModalItem.image}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = selectedModalItem.fallbackImage;
-                    }}
                     alt={selectedModalItem.alt}
-                    referrerPolicy="no-referrer"
                     className="w-full h-full max-h-[50vh] md:max-h-[80vh] object-cover"
                   />
                 </div>
@@ -598,7 +626,7 @@ export default function App() {
                         {selectedModalItem.categoryLabel}
                       </span>
                       <span>·</span>
-                      <span>Cicatrizada há {selectedModalItem.healedMonths} meses</span>
+                      <span>{selectedModalItem.healingText}</span>
                     </div>
 
                     <h3 className="font-syne text-2xl sm:text-3xl font-bold text-white">
@@ -611,11 +639,15 @@ export default function App() {
 
                     <div className="pt-4 border-t border-[#262626] space-y-2 text-xs">
                       <div className="p-3 bg-[#0A0A0A] border border-[#262626]">
-                        <span className="text-neutral-500 block">Tempo de Sessão</span>
+                        <span className="text-neutral-500 block">Anatomia / Local</span>
+                        <span className="font-syne font-semibold text-white">{selectedModalItem.bodyPlacement}</span>
+                      </div>
+                      <div className="p-3 bg-[#0A0A0A] border border-[#262626]">
+                        <span className="text-neutral-500 block">Tempo Estimado de Execução</span>
                         <span className="font-syne font-semibold text-white">{selectedModalItem.sessionTime}</span>
                       </div>
                       <div className="p-3 bg-[#0A0A0A] border border-[#262626]">
-                        <span className="text-neutral-500 block">Equipamento & Técnica</span>
+                        <span className="text-neutral-500 block">Equipamento & Pigmentos</span>
                         <span className="font-epilogue text-neutral-300">{selectedModalItem.technique}</span>
                       </div>
                     </div>
@@ -628,17 +660,17 @@ export default function App() {
                         setSelectedModalItem(null);
                         scrollToQuote(style);
                       }}
-                      className="flex-1 py-3 text-xs uppercase font-syne font-bold tracking-wider text-white border border-white hover:border-[#E60000] hover:bg-[#E60000] transition-colors text-center cursor-pointer"
+                      className="font-cta flex-1 py-3.5 text-xs uppercase font-extrabold tracking-wider text-white border border-white hover:border-[#E60000] hover:bg-[#E60000] transition-colors text-center cursor-pointer"
                     >
                       Orçar Esse Estilo
                     </button>
                     <a
                       href={`${STUDIO_CONFIG.whatsappUrl}?text=${encodeURIComponent(
-                        `Olá! Gostei do projeto "${selectedModalItem.title}" no site da Abarr Tattoo e quero um orçamento autoral nesse estilo.`
+                        `Olá! Gostei do projeto autoral "${selectedModalItem.title}" no site da Abarr Tattoo e quero um orçamento nesse estilo.`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-4 py-3 text-xs uppercase font-syne font-bold tracking-wider bg-[#E60000] text-white hover:bg-[#CC0000] transition-colors"
+                      className="font-cta inline-flex items-center justify-center gap-2 px-5 py-3.5 text-xs uppercase font-extrabold tracking-wider bg-[#E60000] text-white hover:bg-[#CC0000] transition-colors"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>WhatsApp</span>
@@ -650,7 +682,7 @@ export default function App() {
           )}
         </section>
 
-        {/* ----------------- PROCESSO AUTORAL ----------------- */}
+        {/* PROCESSO */}
         <section id="processo" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mb-16 space-y-4">
@@ -695,16 +727,9 @@ export default function App() {
           </div>
         </section>
 
-        {/* ----------------- SIMULADOR DE ORÇAMENTO ----------------- */}
+        {/* ORÇAMENTO */}
         <section id="orcamento" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative overflow-hidden">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[550px] sm:h-[700px] bg-[#E60000]/22 rounded-full blur-[140px] sm:blur-[180px] pointer-events-none"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[400px] h-[250px] bg-[#E60000]/30 rounded-full blur-[120px] pointer-events-none"
-            aria-hidden="true"
-          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[550px] sm:h-[700px] bg-[#E60000]/22 rounded-full blur-[140px] sm:blur-[180px] pointer-events-none" aria-hidden="true" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl mb-12 sm:mb-16 space-y-3 text-center mx-auto">
@@ -718,7 +743,7 @@ export default function App() {
                 Simule & Solicite seu Orçamento Gratuito.
               </h2>
               <p className="font-epilogue text-neutral-300 text-sm sm:text-base max-w-xl mx-auto">
-                Personalize os parâmetros da sua tatuagem abaixo e envie diretamente para os tatuadores da Abarr Tattoo via WhatsApp com um clique.
+                Personalize os parâmetros da sua tatuagem abaixo e envie diretamente para os tatuadores da Abarr Tattoo via WhatsApp.
               </p>
             </div>
 
@@ -734,7 +759,7 @@ export default function App() {
                   <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
                     1. Onde será a tatuagem no seu corpo?
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {BODY_PLACEMENTS.map((placement) => {
                       const isSelected = selectedPlacement === placement;
                       return (
@@ -759,7 +784,7 @@ export default function App() {
                   <label className="block text-xs font-syne font-extrabold uppercase tracking-widest text-neutral-300">
                     2. Qual o estilo artístico principal?
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {TATTOO_STYLES.map((style) => {
                       const isSelected = selectedStyle === style.id;
                       return (
@@ -848,7 +873,7 @@ export default function App() {
                         rows={3}
                         value={ideaText}
                         onChange={(e) => setIdeaText(e.target.value)}
-                        placeholder="Ex: Tatuagem botânica com traços finos no antebraço interno..."
+                        placeholder="Ex: Tatuagem de lírio com traço fino e detalhe em caligrafia oriental..."
                         className="w-full bg-[#0A0A0A] border border-[#262626] p-3 text-xs font-epilogue text-white placeholder-neutral-600 focus:outline-none focus:border-[#E60000] transition-colors resize-none"
                       />
                     </div>
@@ -861,7 +886,7 @@ export default function App() {
                       <MessageCircle className="w-3.5 h-3.5" />
                       <span>Prévia do Envio para o WhatsApp</span>
                     </div>
-                    <span className="text-[11px] text-neutral-500">+55 48 99246-1205</span>
+                    <span className="text-[11px] text-neutral-500">{STUDIO_CONFIG.phoneFormatted}</span>
                   </div>
                   <p className="text-xs font-epilogue text-neutral-300 bg-neutral-950 p-3 border border-neutral-900 leading-relaxed font-mono whitespace-pre-line text-neutral-400">
                     Local: <span className="text-white">{selectedPlacement}</span> · Estilo: <span className="text-white">{currentStyleObj.label}</span> · Tamanho: <span className="text-white">{sizeRange}</span> · Turno: <span className="text-white">{preferredPeriod}</span>
@@ -874,11 +899,11 @@ export default function App() {
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-3 px-8 py-4.5 text-xs sm:text-sm uppercase font-syne font-extrabold tracking-wider bg-[#E60000] hover:bg-[#CC0000] text-white transition-all shadow-[0_0_30px_rgba(230,0,0,0.4)] text-center cursor-pointer"
+                    className="font-cta flex-1 inline-flex items-center justify-center gap-3 px-8 py-4.5 text-sm uppercase font-extrabold tracking-wider bg-[#E60000] hover:bg-[#CC0000] text-white transition-all shadow-[0_0_30px_rgba(230,0,0,0.4)] text-center cursor-pointer"
                   >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Enviar Orçamento para o WhatsApp (+55 48 99246-1205)</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <MessageCircle className="w-5 h-5" />
+                    <span>Enviar Orçamento para o WhatsApp</span>
+                    <ArrowRight className="w-5 h-5" />
                   </a>
 
                   <button
@@ -890,7 +915,7 @@ export default function App() {
                       setIsCopied(true);
                       setTimeout(() => setIsCopied(false), 3000);
                     }}
-                    className="px-6 py-4.5 text-xs uppercase font-syne font-bold tracking-wider text-white border border-white/60 hover:border-white transition-colors cursor-pointer text-center"
+                    className="font-cta px-6 py-4.5 text-xs uppercase font-extrabold tracking-wider text-white border border-white/60 hover:border-white transition-colors cursor-pointer text-center"
                   >
                     {isCopied ? 'Resumo Copiado!' : 'Copiar Resumo'}
                   </button>
@@ -900,7 +925,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* ----------------- PERGUNTAS FREQUENTES ----------------- */}
+        {/* FAQ */}
         <section id="duvidas" className="py-24 sm:py-32 bg-[#0A0A0A] border-b border-[#262626] relative">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
@@ -948,13 +973,10 @@ export default function App() {
         </section>
       </main>
 
-      {/* ----------------- FOOTER ----------------- */}
+      {/* FOOTER */}
       <footer className="bg-[#0A0A0A] border-t border-[#262626] relative overflow-hidden">
         <div className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-b border-[#262626] relative">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-[#E60000]/10 rounded-full blur-[140px] pointer-events-none"
-            aria-hidden="true"
-          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-[#E60000]/10 rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
 
           <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
             <div className="inline-flex items-center gap-2">
@@ -977,16 +999,16 @@ export default function App() {
                 href={STUDIO_CONFIG.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-xs sm:text-sm uppercase font-syne font-bold tracking-wider bg-[#E60000] hover:bg-[#CC0000] text-white transition-all shadow-xl shadow-[#E60000]/30 cursor-pointer"
+                className="font-cta w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 text-sm uppercase font-extrabold tracking-wider bg-[#E60000] hover:bg-[#CC0000] text-white transition-all shadow-xl shadow-[#E60000]/30 cursor-pointer"
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="w-5 h-5" />
                 <span>Iniciar Orçamento pelo WhatsApp</span>
-                <ArrowUpRight className="w-4 h-4" />
+                <ArrowUpRight className="w-5 h-5" />
               </a>
 
               <button
                 onClick={() => scrollToQuote()}
-                className="w-full sm:w-auto px-8 py-4 text-xs sm:text-sm uppercase font-syne font-bold tracking-wider text-white border-2 border-white hover:border-[#E60000] hover:bg-white hover:text-black transition-all cursor-pointer"
+                className="font-cta w-full sm:w-auto px-8 py-4 text-sm uppercase font-extrabold tracking-wider text-white border-2 border-white hover:border-[#E60000] hover:bg-white hover:text-black transition-all cursor-pointer"
               >
                 Simular Orçamento no Site
               </button>
@@ -1037,26 +1059,10 @@ export default function App() {
                 Navegação
               </h4>
               <ul className="space-y-2.5 text-xs font-epilogue text-neutral-400">
-                <li>
-                  <a href="#portfolio" className="hover:text-white transition-colors">
-                    Portfólio & Obras
-                  </a>
-                </li>
-                <li>
-                  <a href="#processo" className="hover:text-white transition-colors">
-                    Do Esboço à Cicatrização
-                  </a>
-                </li>
-                <li>
-                  <a href="#orcamento" className="hover:text-white transition-colors">
-                    Simulador de Orçamento
-                  </a>
-                </li>
-                <li>
-                  <a href="#duvidas" className="hover:text-white transition-colors">
-                    Dúvidas Frequentes
-                  </a>
-                </li>
+                <li><a href="#portfolio" className="hover:text-white transition-colors">Portfólio & Obras</a></li>
+                <li><a href="#processo" className="hover:text-white transition-colors">Do Esboço à Cicatrização</a></li>
+                <li><a href="#orcamento" className="hover:text-white transition-colors">Simulador de Orçamento</a></li>
+                <li><a href="#duvidas" className="hover:text-white transition-colors">Dúvidas Frequentes</a></li>
               </ul>
             </div>
 
